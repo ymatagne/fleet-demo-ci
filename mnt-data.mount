@@ -1,0 +1,10 @@
+[Unit]
+Description=nfs
+
+[Mount]
+What=172.31.29.87:/home/core/share/
+Where=/mnt/data/
+Type=nfs
+
+[X-Fleet]
+Global=true
