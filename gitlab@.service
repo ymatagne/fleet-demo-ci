@@ -12,11 +12,11 @@ ExecStartPre=-/usr/bin/docker pull sameersbn/gitlab:latest
 ExecStart=/usr/bin/docker run --name gitlab%i -p 10022:22 \
   -e 'GITLAB_HTTPS=false' \
   -e 'GITLAB_SSH_PORT=10022' \
-  -e 'VIRTUAL_HOST=gitlab.kuuji.ovh' \
+  -e 'VIRTUAL_HOST=gitlab.beertoobeer.com' \
   -e 'DB_NAME=gitlab' \
   -e 'DB_USER=gitlab' \
   -e "DB_PASS=gitlab" \
-  -e 'GITLAB_HOST=gitlab.kuuji.ovh' \
+  -e 'GITLAB_HOST=gitlab.beertoobeer.com' \
   -v /mnt/data/gitlab:/home/git/data \
   --link gitlabredis%i:redisio \
   --link gitlabpostgresql%i:postgresql \

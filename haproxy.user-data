@@ -53,18 +53,18 @@ write_files:
 
       frontend http
        bind *:80
-       acl redmine hdr(host) -i redmine.kuuji.ovh
-       acl gitlab hdr(host) -i gitlab.kuuji.ovh
-       acl jenkins hdr(host) -i jenkins.kuuji.ovh
-       acl sonarqube hdr(host) -i sonarqube.kuuji.ovh
-       use_backend redmine.kuuji.ovh if redmine
-       use_backend gitlab.kuuji.ovh if gitlab
-       use_backend jenkins.kuuji.ovh if jenkins
-       use_backend sonarqube.kuuji.ovh if sonarqube
+       acl redmine hdr(host) -i redmine.beertoobeer.com
+       acl gitlab hdr(host) -i gitlab.beertoobeer.com
+       acl jenkins hdr(host) -i jenkins.beertoobeer.com
+       acl sonarqube hdr(host) -i sonarqube.beertoobeer.com
+       use_backend redmine.beertoobeer.com if redmine
+       use_backend gitlab.beertoobeer.com if gitlab
+       use_backend jenkins.beertoobeer.com if jenkins
+       use_backend sonarqube.beertoobeer.com if sonarqube
 
-      backend gitlab.kuuji.ovh
-        option httpchk HEAD / HTTP/1.1\r\nHost:\ gitlab.kuuji.ovh
-        http-request set-header Host gitlab.kuuji.ovh
+      backend gitlab.beertoobeer.com
+        option httpchk HEAD / HTTP/1.1\r\nHost:\ gitlab.beertoobeer.com
+        http-request set-header Host gitlab.beertoobeer.com
         server node1 52.28.111.34:80 check
         server node2 52.28.78.157:80 check
         server node3 52.28.100.26:80 check
@@ -72,27 +72,27 @@ write_files:
         server node5 52.28.78.39:80 check
 
 
-      backend redmine.kuuji.ovh
-        option httpchk HEAD / HTTP/1.1\r\nHost:\ redmine.kuuji.ovh
-        http-request set-header Host redmine.kuuji.ovh
+      backend redmine.beertoobeer.com
+        option httpchk HEAD / HTTP/1.1\r\nHost:\ redmine.beertoobeer.com
+        http-request set-header Host redmine.beertoobeer.com
         server node1 52.28.111.34:80 check
         server node2 52.28.78.157:80 check
         server node3 52.28.100.26:80 check
         server node4 52.28.91.47:80 check
         server node5 52.28.78.39:80 check
 
-      backend jenkins.kuuji.ovh
-        option httpchk HEAD /login HTTP/1.1\r\nHost:\ jenkins.kuuji.ovh
-        http-request set-header Host jenkins.kuuji.ovh
+      backend jenkins.beertoobeer.com
+        option httpchk HEAD /login HTTP/1.1\r\nHost:\ jenkins.beertoobeer.com
+        http-request set-header Host jenkins.beertoobeer.com
         server node1 52.28.111.34:80 check
         server node2 52.28.78.157:80 check
         server node3 52.28.100.26:80 check
         server node4 52.28.91.47:80 check
         server node5 52.28.78.39:80 check
 
-      backend sonarqube.kuuji.ovh
-        option httpchk HEAD / HTTP/1.1\r\nHost:\ sonarqube.kuuji.ovh
-        http-request set-header Host sonarqube.kuuji.ovh
+      backend sonarqube.beertoobeer.com
+        option httpchk HEAD / HTTP/1.1\r\nHost:\ sonarqube.beertoobeer.com
+        http-request set-header Host sonarqube.beertoobeer.com
         server node1 52.28.111.34:80 check
         server node2 52.28.78.157:80 check
         server node3 52.28.100.26:80 check

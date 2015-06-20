@@ -14,7 +14,7 @@ ExecStart=/usr/bin/docker run --name redmine%i  \
   -e "DB_NAME=redmine" \
   -e "DB_USER=redmine" \
   -e "DB_PASS=redmine" \
-  -e "VIRTUAL_HOST=redmine.kuuji.ovh" \
+  -e "VIRTUAL_HOST=redmine.beertoobeer.com" \
   -v /mnt/data/redmine/data-instance:/home/redmine/data sameersbn/redmine:latest
 ExecStop=-/usr/bin/docker stop redmine%i
 
