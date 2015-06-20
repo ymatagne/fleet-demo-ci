@@ -8,7 +8,7 @@ ExecStartPre=-/usr/bin/docker kill mysql-redmine%i
 ExecStartPre=-/usr/bin/docker rm mysql-redmine%i
 ExecStartPre=-/usr/bin/docker pull mysql:latest
 ExecStart=/usr/bin/docker run --name=mysql-redmine%i \
-               -e 'MYSQL_DATABASE=secret' -e 'MYSQL_DATABASE=redmine' -e 'MYSQL_USER=redmine' -e 'MYSQL_PASSWORD=MDP2redmine' \
+               -e 'MYSQL_ROOT_PASSWORD=secret' -e 'MYSQL_DATABASE=redmine' -e 'MYSQL_USER=redmine' -e 'MYSQL_PASSWORD=MDP2redmine' \
                -v /mnt/data/redmine/data-mysql:/var/lib/mysql \
                -p 0.0.0.0:3306:3306 \
                mysql:latest
