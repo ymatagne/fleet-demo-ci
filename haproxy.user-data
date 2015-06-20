@@ -22,24 +22,82 @@ write_files:
     permissions: 0600
     owner: core:core
     content: |
-      listen stats :5000
-        mode http
+      global
+              maxconn 4096
+              log 127.0.0.1 local0 debug
+
+      defaults
+          mode http
+          timeout connect 30000ms
+          timeout client 50000ms
+          timeout server 10000ms
+          option  httplog
+          option  dontlognull
+          option forwardfor
+
+      listen stats *:5000
         stats enable
-        stats hide-version
-        stats realm Haproxy\ Statistics
         stats uri /
-        stats auth stats:stats
+        stats hide-version
+        stats auth haproxy:haproxy
+
+      listen gitlab_ssh :10022
+              mode tcp
+              option tcplog
+              balance leastconn
+              server node1 52.28.111.34:10022 check
+              server node2 52.28.78.157:10022 check
+              server node3 52.28.100.26:10022 check
+              server node4 52.28.91.47:10022 check
+              server node5 52.28.78.39:10022 check
+
+      frontend http
+       bind *:80
+       acl redmine hdr(host) -i redmine.kuuji.ovh
+       acl gitlab hdr(host) -i gitlab.kuuji.ovh
+       acl jenkins hdr(host) -i jenkins.kuuji.ovh
+       acl sonarqube hdr(host) -i sonarqube.kuuji.ovh
+       use_backend redmine.kuuji.ovh if redmine
+       use_backend gitlab.kuuji.ovh if gitlab
+       use_backend jenkins.kuuji.ovh if jenkins
+       use_backend sonarqube.kuuji.ovh if sonarqube
+
+      backend gitlab.kuuji.ovh
+        option httpchk HEAD / HTTP/1.1\r\nHost:\ gitlab.kuuji.ovh
+        http-request set-header Host gitlab.kuuji.ovh
+        server node1 52.28.111.34:80 check
+        server node2 52.28.78.157:80 check
+        server node3 52.28.100.26:80 check
+        server node4 52.28.91.47:80 check
+        server node5 52.28.78.39:80 check
 
 
+      backend redmine.kuuji.ovh
+        option httpchk HEAD / HTTP/1.1\r\nHost:\ redmine.kuuji.ovh
+        http-request set-header Host redmine.kuuji.ovh
+        server node1 52.28.111.34:80 check
+        server node2 52.28.78.157:80 check
+        server node3 52.28.100.26:80 check
+        server node4 52.28.91.47:80 check
+        server node5 52.28.78.39:80 check
 
-        52.28.111.34
-        52.28.78.157
-        52.28.100.26
-        52.28.91.47
-        52.28.78.39
+      backend jenkins.kuuji.ovh
+        option httpchk HEAD /login HTTP/1.1\r\nHost:\ jenkins.kuuji.ovh
+        http-request set-header Host jenkins.kuuji.ovh
+        server node1 52.28.111.34:80 check
+        server node2 52.28.78.157:80 check
+        server node3 52.28.100.26:80 check
+        server node4 52.28.91.47:80 check
+        server node5 52.28.78.39:80 check
 
-
-
+      backend sonarqube.kuuji.ovh
+        option httpchk HEAD / HTTP/1.1\r\nHost:\ sonarqube.kuuji.ovh
+        http-request set-header Host sonarqube.kuuji.ovh
+        server node1 52.28.111.34:80 check
+        server node2 52.28.78.157:80 check
+        server node3 52.28.100.26:80 check
+        server node4 52.28.91.47:80 check
+        server node5 52.28.78.39:80 check
 
 coreos:
   etcd2:
@@ -65,7 +123,7 @@ coreos:
         ExecStartPre=-/usr/bin/docker kill haproxy00
         ExecStartPre=-/usr/bin/docker rm haproxy00
         ExecStartPre=-/usr/bin/docker pull haproxy
-        ExecStart=/usr/bin/docker run --name haproxy00 -p 0.0.0.0:80:80 -p 0.0.0.0:5000:5000 -p 0.0.0.0:20022:22 \
+        ExecStart=/usr/bin/docker run --name haproxy00 -p 0.0.0.0:80:80 -p 0.0.0.0:5000:5000 -p 0.0.0.0:10022:22 \
                                   -v /home/core/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg haproxy
 
         [Install]
