@@ -45,11 +45,12 @@ write_files:
               mode tcp
               option tcplog
               balance leastconn
-              server node1 52.28.111.34:10022 check
-              server node2 52.28.78.157:10022 check
-              server node3 52.28.100.26:10022 check
-              server node4 52.28.91.47:10022 check
-              server node5 52.28.78.39:10022 check
+              server node1 52.28.81.27:10022 check
+              server node2 52.28.151.232:10022 check
+              server node3 52.28.136.73:10022 check
+              server node4 52.28.93.185:10022 check
+              server node5 52.28.64.204:10022 check
+
 
       frontend http
        bind *:80
@@ -65,39 +66,39 @@ write_files:
       backend gitlab.beertoobeer.com
         option httpchk HEAD / HTTP/1.1\r\nHost:\ gitlab.beertoobeer.com
         http-request set-header Host gitlab.beertoobeer.com
-        server node1 52.28.111.34:80 check
-        server node2 52.28.78.157:80 check
-        server node3 52.28.100.26:80 check
-        server node4 52.28.91.47:80 check
-        server node5 52.28.78.39:80 check
+        server node1 52.28.81.27:80 check
+        server node2 52.28.151.232:80 check
+        server node3 52.28.136.73:80 check
+        server node4 52.28.93.185:80 check
+        server node5 52.28.64.204:80 check
 
 
       backend redmine.beertoobeer.com
         option httpchk HEAD / HTTP/1.1\r\nHost:\ redmine.beertoobeer.com
         http-request set-header Host redmine.beertoobeer.com
-        server node1 52.28.111.34:80 check
-        server node2 52.28.78.157:80 check
-        server node3 52.28.100.26:80 check
-        server node4 52.28.91.47:80 check
-        server node5 52.28.78.39:80 check
+        server node1 52.28.81.27:80 check
+        server node2 52.28.151.232:80 check
+        server node3 52.28.136.73:80 check
+        server node4 52.28.93.185:80 check
+        server node5 52.28.64.204:80 check
 
       backend jenkins.beertoobeer.com
         option httpchk HEAD /login HTTP/1.1\r\nHost:\ jenkins.beertoobeer.com
         http-request set-header Host jenkins.beertoobeer.com
-        server node1 52.28.111.34:80 check
-        server node2 52.28.78.157:80 check
-        server node3 52.28.100.26:80 check
-        server node4 52.28.91.47:80 check
-        server node5 52.28.78.39:80 check
+        server node1 52.28.81.27:80 check
+        server node2 52.28.151.232:80 check
+        server node3 52.28.136.73:80 check
+        server node4 52.28.93.185:80 check
+        server node5 52.28.64.204:80 check
 
       backend sonarqube.beertoobeer.com
         option httpchk HEAD / HTTP/1.1\r\nHost:\ sonarqube.beertoobeer.com
         http-request set-header Host sonarqube.beertoobeer.com
-        server node1 52.28.111.34:80 check
-        server node2 52.28.78.157:80 check
-        server node3 52.28.100.26:80 check
-        server node4 52.28.91.47:80 check
-        server node5 52.28.78.39:80 check
+        server node1 52.28.81.27:80 check
+        server node2 52.28.151.232:80 check
+        server node3 52.28.136.73:80 check
+        server node4 52.28.93.185:80 check
+        server node5 52.28.64.204:80 check
 
 coreos:
   etcd2:
