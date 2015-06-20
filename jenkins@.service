@@ -9,7 +9,7 @@ ExecStartPre=-/usr/bin/docker rm jenkins%i
 ExecStartPre=-/usr/bin/docker pull jenkins:latest
 ExecStart=/usr/bin/docker run --name jenkins%i \
             -p 9092:9092 \
-            -e VIRTUAL_HOST=jenkins.kuuji.ovh  \
+            -e VIRTUAL_HOST=jenkins.beertoobeer.com  \
             -e VIRTUAL_PORT=8080 \
             -v /mnt/data/jenkins:/var/jenkins_home \
             jenkins:latest
