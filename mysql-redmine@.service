@@ -1,0 +1,15 @@
+[Unit]
+Description=Mysql Redmine Service
+
+[Service]
+User=core
+TimeoutStartSec=0
+ExecStartPre=-/usr/bin/docker kill mysql-redmine%i
+ExecStartPre=-/usr/bin/docker rm mysql-redmine%i
+ExecStartPre=-/usr/bin/docker pull mysql:latest
+ExecStart=/usr/bin/docker run --name=mysql-redmine-norsys%i  \
+              -e 'DB_NAME=redmine' -e 'DB_USER=redmine' -e 'DB_PASS=redmine'\
+               -v /mnt/data/redmine/data-mysql:/var/lib/mysql \
+               -p 0.0.0.0:3306:3306 \
+               mysql:latest
+ExecStop=-/usr/bin/docker stop mysql-redmine-norsys%i

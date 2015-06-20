@@ -7,7 +7,7 @@ User=core
 TimeoutStartSec=0
 ExecStartPre=-/usr/bin/docker kill gitlabredis%i
 ExecStartPre=-/usr/bin/docker rm gitlabredis%i
-ExecStartPre=-/usr/bin/docker pull hub-docker.norsys.fr/forge-infra/redis:latest
+ExecStartPre=-/usr/bin/docker pull redis:latest
 ExecStart=/usr/bin/docker run --name=gitlabredis%i \
-       hub-docker.norsys.fr/forge-infra/redis:latest
+       redis:latest
 ExecStop=-/usr/bin/docker gitlabredis%i

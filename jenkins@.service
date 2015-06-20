@@ -6,11 +6,11 @@ User=core
 TimeoutStartSec=0
 ExecStartPre=-/usr/bin/docker kill jenkins%i
 ExecStartPre=-/usr/bin/docker rm jenkins%i
-ExecStartPre=-/usr/bin/docker pull hub-docker.norsys.fr/forge-infra/jenkins:1.609.1
+ExecStartPre=-/usr/bin/docker pull jenkins:latest
 ExecStart=/usr/bin/docker run --name jenkins%i \
             -p 9092:9092 \
-            -e VIRTUAL_HOST=jenkins.norsys.fr \
+            -e VIRTUAL_HOST=jenkins.kuuji.ovh  \
             -e VIRTUAL_PORT=8080 \
             -v /mnt/data/jenkins:/var/jenkins_home \
-            hub-docker.norsys.fr/forge-infra/jenkins:1.609.1
+            jenkins:latest
 ExecStop=-/usr/bin/docker stop jenkins%i

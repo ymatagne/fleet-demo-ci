@@ -1,0 +1,60 @@
+#cloud-config
+hostname: haproxy-00
+ssh_authorized_keys:
+  - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCb7s1XS5Fvyz/XjCJdaMI9rzh1Qs1UT47RLnOTsDPEbFJyh++fY5Xd5WLttrj5FxvXnxkMNWl9XIv2UioDMzeZl1r8oML/V+II1ltmY7GP0ATKb80IIJaEmjVTjJkURvQsikq5DRLwkPvierpsIdrtL/a1mELJlAnCjYM1NocHb86swy6hrx7tMm4O58FKW9BCcRmU6a5Z3Vm2zuRRqM/MofiSx7xi8eT29LC3JTqi4W8aqBwEy7fF5eDYEn9mhj+ihcZKHPlo1v1FWn2fZB9yYrhf5eYCZAP4JEicerfy1maKCSN4D0ZnCbuJn9bjx4MpRdUgwWmnk7b2KxO3C6SL yan@ubuntu-yma
+  - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC4y69NAzVPNxcxqdogr1eERJEH750A/FrQW72svGYOs1kpxSTJ7L3Y61jb4EEx2pS7qAStyZHXk9esaanen0PFvgB5jRpzCHxBhkZ7RDc9pwtFC5FqZuQOSo7Xr7NuZ2rnwNcH5jafyMUqHLrrh4B8muFtBBUXEs+0JEtFFYeF0y/d+5Z8xn0b9aM6BKx7DhW61/rbkJw7ZWwIGR6MNhhuHqgdUyJ+LNQznOuNOsv0CPDr72820VBJ1WVx72Ed2epZWvITFI6Ta7oB3Cw5fsfhiU/Rjg2wmkTeRYOE7j1MSZxpKyHmZov2i4LKuI5S/Dzmqcct4QqjIEPWU5p9105P alexandregarcia@mbpdealexandre.bouyguesbox.fr
+  - ssh-dss AAAAB3NzaC1kc3MAAACBAK5ZwIiadyhYoid8glKZLTRSmwk8eNR+I0bNEh3IdD7WUFL8GWdcll8yZP8FOxGG2M/KgjQKUBdHW+oN3b+kpJdMh3oDxAb1nx6lEgUe+SGL7FEBpWt8ov3WvwLGY4/65R52HfMnvUZYTsxshFBV2M6e8rYRmYRpSSi9hOhh/fRzAAAAFQCiGFJcNmCHPbBy4V2OSlHXVCrnhwAAAIEAiKxAmEipbUSJ4X6AeEvEhkpqaHk8QtWXOCqO2agDEn8UgNMxnmhl5dDlNlO+jGPe+gy7PQqTPzoHoQlYLb0wQ+fczDZ/t+JnB9ZOqA1AS71JX43+gjJ/cxfFRS3+tRDKjrAk3GpBEJI9+UtrLWcTa300VDmKv+2w/5jDCzG2rl8AAACBAJ2VqMc/K9vM2SGVHnTLqLMwtZn2EFyVhxy8jmQovss2Hirp0s4PnMk+6MFWBOrPXx0GoHY+L1DO3cDhSzA0yHeTxWJMXmKLDU8AlDQKHT0aZXqnAcqAFc3DPS98AC0RCgpc/qEFd2nI/OfEygziFKIqpVBTSPgSX4OOeG4S8gV1 agarcia@norsys-debian-agarcia
+  - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDc3bEYY7RA+2NfsqXYDYmpZQf3OouPPDjEj7w227wBMpAYWvxTPrikk5wQm8A40GfdbS5DzAqa6nQtnJjKoFe9qDIQf4QorojjgBXAKscxYAChHjGsDAOXBVNrZkTNW5zyTqQF38dxLpL2hEuAknU476eHoLzgydCQm+sxFjWV8C0gwfRifPpBKCjfJH8xhnDjjfeiFoyFw7h+rEuldJq+LZtHGSt3Ag/WpvlN1jr6Cr1uNaBTluB1vBvfwX3BOjRDL4Yyj4RaU72c24yzL0Cf9H+rD+qmPBXC98CTKt81kPJTLNrTltYDCSoEVlIN0n45vwG6NTuyT9yzeJM+yZUV luya@new-host.home
+write_files:
+  - path: /etc/ssh/sshd_config
+    permissions: 0600
+    owner: root:root
+    content: |
+      # Use most defaults for sshd configuration.
+      UsePrivilegeSeparation sandbox
+      Subsystem sftp internal-sftp
+
+      PermitRootLogin no
+      AllowUsers core
+      PasswordAuthentication no
+      ChallengeResponseAuthentication no
+  - path: /home/core/haproxy.cfg
+    permissions: 0600
+    owner: core:core
+    content: |
+      listen stats :5000
+        mode http
+        stats enable
+        stats hide-version
+        stats realm Haproxy\ Statistics
+        stats uri /
+        stats auth stats:stats
+coreos:
+  etcd2:
+    name: haproxy-00
+  units:
+    - name: etcd2.service
+      command: start
+    - name: docker.service
+      command: start
+    - name: fleet.service
+      command: start
+    - name: haproxy.service
+      command: start
+      content: |
+        [Unit]
+        Description=Haproxy
+        After=docker.service
+        Requires=docker.service
+
+        [Service]
+        User=core
+        TimeoutStartSec=0
+        ExecStartPre=-/usr/bin/docker kill haproxy00
+        ExecStartPre=-/usr/bin/docker rm haproxy00
+        ExecStartPre=-/usr/bin/docker pull haproxy
+        ExecStart=/usr/bin/docker run --name haproxy00 -p 0.0.0.0:80:80 -p 0.0.0.0:5000:5000 -p 0.0.0.0:20022:22 \
+                                  -v /home/core/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg haproxy
+
+        [Install]
+        WantedBy=multi-user.target

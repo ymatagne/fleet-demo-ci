@@ -8,32 +8,19 @@ User=core
 TimeoutStartSec=0
 ExecStartPre=-/usr/bin/docker kill gitlab%i
 ExecStartPre=-/usr/bin/docker rm gitlab%i
-ExecStartPre=-/usr/bin/docker pull hub-docker.norsys.fr/forge-infra/gitlab:7.7.2
+ExecStartPre=-/usr/bin/docker pull sameersbn/gitlab:latest
 ExecStart=/usr/bin/docker run --name gitlab%i -p 10022:22 \
-  -e 'GITLAB_HTTPS=true' \
+  -e 'GITLAB_HTTPS=false' \
   -e 'GITLAB_SSH_PORT=10022' \
-  -e 'VIRTUAL_HOST=git.norsys.fr' \
-  -e 'DB_NAME=gitlabhq_production' \
+  -e 'VIRTUAL_HOST=gitlab.kuuji.ovh' \
+  -e 'DB_NAME=gitlab' \
   -e 'DB_USER=gitlab' \
-  -e "DB_PASS=posdgd5832" \
-  -e 'GITLAB_HOST=git.norsys.fr' \
-  -e 'GITLAB_EMAIL=git@norsys.fr' \
-  -e 'GITLAB_BACKUPS=daily' \
-  -e 'GITLAB_BACKUP_EXPIRY=604800' \
-  -e 'LDAP_ENABLED=true' \
-  -e 'LDAP_HOST=172.20.16.160' \
-  -e 'LDAP_PORT=389' \
-  -e 'LDAP_UID=sAMAccountName' \
-  -e 'LDAP_METHOD=plain' \
-  -e 'LDAP_BIND_DN=CN=user-lecture,OU=Autres,OU=Utilisateurs,DC=exchange,DC=norsys,DC=fr' \
-  -e 'LDAP_PASS=MDP2ulec*' \
-  -e 'LDAP_ACTIVE_DIRECTORY=true' \
-  -e 'LDAP_ALLOW_USERNAME_OR_EMAIL_LOGIN=false' \
-  -e 'LDAP_BASE=OU=Utilisateurs,DC=exchange,DC=norsys,DC=fr' \
+  -e "DB_PASS=gitlab" \
+  -e 'GITLAB_HOST=gitlab.kuuji.ovh' \
   -v /mnt/data/gitlab:/home/git/data \
   --link gitlabredis%i:redisio \
   --link gitlabpostgresql%i:postgresql \
-  hub-docker.norsys.fr/forge-infra/gitlab:7.7.2
+  sameersbn/gitlab:latest
 ExecStop=-/usr/bin/docker stop gitlab%i
 [X-Fleet]
 MachineOf=gitlabpostgresql@%i.service

@@ -1,15 +1,15 @@
 [Unit]
-Description=Mysql for sonar Service
+Description=Mysql sonar Service
 
 [Service]
 User=core
 TimeoutStartSec=0
 ExecStartPre=-/usr/bin/docker kill mysql-sonar%i
 ExecStartPre=-/usr/bin/docker rm mysql-sonar%i
-ExecStartPre=-/usr/bin/docker pull hub-docker.norsys.fr/forge-infra/redmine-mysql
+ExecStartPre=-/usr/bin/docker pull mysql:latest
 ExecStart=/usr/bin/docker run --name=mysql-sonar%i  \
-              -e 'DB_NAME=sonar' -e 'DB_USER=sonar' -e 'DB_PASS=MDP2norsys'\
-               -v /mnt/data/sonar/data-sonar:/var/lib/mysql \
+              -e 'DB_NAME=sonar' -e 'DB_USER=sonar' -e 'DB_PASS=sonar'\
+               -v /mnt/data/sonar/data-mysql:/var/lib/mysql \
                -p 0.0.0.0:3307:3306 \
-               hub-docker.norsys.fr/forge-infra/redmine-mysql
+               mysql:latest
 ExecStop=-/usr/bin/docker stop mysql-sonar%i
