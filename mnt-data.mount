@@ -5,6 +5,7 @@ Description=nfs
 What=172.31.29.87:/home/core/share/
 Where=/mnt/data/
 Type=nfs
+Options=rw,hard,async,intr,nolock,rsize=49152,wsize=49152
 
 [X-Fleet]
 Global=true
