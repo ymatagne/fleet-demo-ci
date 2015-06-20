@@ -1,0 +1,11 @@
+[Unit]
+Description=Nginx service
+
+[Service]
+TimeoutStartSec=0
+ExecStartPre=-/usr/bin/docker kill nginx-rp
+ExecStartPre=-/usr/bin/docker rm nginx-rp
+ExecStartPre=/usr/bin/docker pull jwilder/nginx-proxy
+ExecStart=/usr/bin/docker run --name nginx-rp -p 80:80 -v /var/run/docker.sock:/tmp/docker.sock jwilder/nginx-proxy
+[X-Fleet]
+Global=true

@@ -1,0 +1,18 @@
+Description=Postgresql Gitlab Service
+After=gitlabredis.service
+Requires=docker.service
+
+[Service]
+User=core
+TimeoutStartSec=0
+ExecStartPre=-/usr/bin/docker kill gitlabpostgresql%i
+ExecStartPre=-/usr/bin/docker rm gitlabpostgresql%i
+ExecStartPre=-/usr/bin/docker pull hub-docker.norsys.fr/forge-infra/postgresql:9.4
+ExecStart=/usr/bin/docker run --name=gitlabpostgresql%i  \
+          -e 'DB_NAME=gitlabhq_production' -e 'DB_USER=gitlab' -e 'DB_PASS=posdgd5832'\
+          -v /mnt/data/stack-tools/gitlab-postgresql:/var/lib/postgresql \
+          hub-docker.norsys.fr/forge-infra/postgresql:9.4
+ExecStop=-/usr/bin/docker gitlabpostgresql%i
+
+[X-Fleet]
+MachineOf=gitlabredis@%i.service

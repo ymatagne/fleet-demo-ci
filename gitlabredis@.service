@@ -1,0 +1,13 @@
+Description=Redis Gitlab Service
+After=docker.service
+Requires=docker.service
+
+[Service]
+User=core
+TimeoutStartSec=0
+ExecStartPre=-/usr/bin/docker kill gitlabredis%i
+ExecStartPre=-/usr/bin/docker rm gitlabredis%i
+ExecStartPre=-/usr/bin/docker pull hub-docker.norsys.fr/forge-infra/redis:latest
+ExecStart=/usr/bin/docker run --name=gitlabredis%i \
+       hub-docker.norsys.fr/forge-infra/redis:latest
+ExecStop=-/usr/bin/docker gitlabredis%i

@@ -1,0 +1,24 @@
+[Unit]
+Description=Mysql for sonar Service
+
+[Service]
+User=core
+TimeoutStartSec=0
+ExecStartPre=-/usr/bin/docker kill sonarqube%i
+ExecStartPre=-/usr/bin/docker rm sonarqube%i
+ExecStartPre=-/usr/bin/docker pull hub-docker.norsys.fr/forge-infra/sonarqube:5.1
+ExecStart=/usr/bin/docker run --name sonarqube%i \
+              -e VIRTUAL_HOST=sonarqube.norsys.fr \
+              -e VIRTUAL_PORT=9000 \
+              -e SONARQUBE_JDBC_USERNAME=sonar \
+              -e SONARQUBE_JDBC_PASSWORD=MDP2norsys \
+              -e SONARQUBE_JDBC_URL=jdbc:mysql://172.17.42.1:3307/sonar?useUnicode=true&characterEncoding=utf8 \
+              -v /mnt/data/sonar/extensions:/opt/sonarqube/extensions \
+              -v /mnt/data/sonar/conf/sonar.properties:/opt/sonarqube/conf/sonar.properties \
+              -v /mnt/data/sonar/conf/wrapper.conf:/opt/sonarqube/conf/wrapper.conf \
+              -v /mnt/data/sonar/conf/logback.xml:/opt/sonarqube/conf/logback.xml \
+              hub-docker.norsys.fr/forge-infra/sonarqube:5.1
+ExecStop=-/usr/bin/docker stop sonarqube%i
+
+[X-Fleet]
+MachineOf=mysql-sonar@%i.service
