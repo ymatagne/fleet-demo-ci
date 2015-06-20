@@ -29,6 +29,18 @@ write_files:
         stats realm Haproxy\ Statistics
         stats uri /
         stats auth stats:stats
+
+
+
+        52.28.111.34
+        52.28.78.157
+        52.28.100.26
+        52.28.91.47
+        52.28.78.39
+
+
+
+
 coreos:
   etcd2:
     name: haproxy-00
