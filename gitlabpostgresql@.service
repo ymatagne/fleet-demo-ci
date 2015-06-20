@@ -7,12 +7,13 @@ User=core
 TimeoutStartSec=0
 ExecStartPre=-/usr/bin/docker kill gitlabpostgresql%i
 ExecStartPre=-/usr/bin/docker rm gitlabpostgresql%i
-ExecStartPre=-/usr/bin/docker pull postgresql:9.4
+ExecStartPre=-/usr/bin/docker pull sameersbn/postgresql:9.4
 ExecStart=/usr/bin/docker run --name=gitlabpostgresql%i  \
           -e 'DB_NAME=gitlab' -e 'DB_USER=gitlab' -e 'DB_PASS=gitlab' \
           -v /mnt/data/stack-tools/gitlab-postgresql:/var/lib/postgresql \
-          postgresql:9.4
-ExecStop=-/usr/bin/docker gitlabpostgresql%i
+          sameersbn/postgresql:9.4
+
+ExecStop=-/usr/bin/docker stop gitlabpostgresql%i
 
 [X-Fleet]
 MachineOf=gitlabredis@%i.service
