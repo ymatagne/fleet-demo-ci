@@ -11,9 +11,9 @@ ExecStartPre=-/usr/bin/docker pull sameersbn/redmine:latest
 ExecStart=/usr/bin/docker run --name redmine%i  \
   -e "DB_TYPE=mysql" \
   -e "DB_HOST=172.17.42.1" \
-  -e "DB_NAME=redmine" \
+  -e "DB_NAME=dbredmine" \
   -e "DB_USER=redmine" \
-  -e "DB_PASS=redmine" \
+  -e "DB_PASS=MDP2redmine" \
   -e "VIRTUAL_HOST=redmine.beertoobeer.com" \
   -v /mnt/data/redmine/data-instance:/home/redmine/data sameersbn/redmine:latest
 ExecStop=-/usr/bin/docker stop redmine%i

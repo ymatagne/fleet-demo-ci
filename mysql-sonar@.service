@@ -8,7 +8,7 @@ ExecStartPre=-/usr/bin/docker kill mysql-sonar%i
 ExecStartPre=-/usr/bin/docker rm mysql-sonar%i
 ExecStartPre=-/usr/bin/docker pull sameersbn/mysql:latest
 ExecStart=/usr/bin/docker run --name=mysql-sonar%i  \
-              -e 'DB_NAME=sonar' -e 'DB_USER=sonar' -e 'DB_PASS=sonar' \
+              -e 'DB_NAME=dbsonar' -e 'DB_USER=sonar' -e 'DB_PASS=MDP2sonar' \
                -v /mnt/data/sonar/data-mysql:/var/lib/mysql \
                -p 0.0.0.0:3307:3306 \
                sameersbn/mysql:latest
